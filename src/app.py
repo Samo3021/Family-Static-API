@@ -44,23 +44,20 @@ def add_mem():
     request_body = json.loads(request.data)
     
     jackson_family.add_member(request_body)
-    response_body = {
-        "family":request_body,
-         "message":"ak7"
-        
-    }
-
-    return jsonify(response_body), 200
+    response_body = {"family":request_body}
+    if 'id' not in response_body:
+        raise APIException('You need to specify the id', status_code=400)    
+    
+    return jsonify(response_body ), 200
 
 @app.route('/members/<int:member_id>', methods=['DELETE'])
 def del_mem(member_id):
     
     
-    jackson_family.delete_member(member_id)
-   
+    delmen = jackson_family.delete_member(member_id)
     
-    
-    return jsonify(jackson_family.get_all_members()), 200
+            
+    return jsonify("successful delete!"), 200
 
 @app.route('/members/<int:member_id>', methods=['GET'])
 def get_mem(member_id):
@@ -68,7 +65,8 @@ def get_mem(member_id):
     
     
     member1 = jackson_family.get_member(member_id)
-   
+    if member1 is None:
+        raise APIException('Member not found', status_code=404)
     
     return jsonify(member1), 200
 # this only runs if `$ python src/app.py` is executed
