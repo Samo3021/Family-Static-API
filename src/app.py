@@ -44,10 +44,11 @@ def add_mem():
     request_body = json.loads(request.data)
     
     jackson_family.add_member(request_body)
-    response_body = {"family":request_body}
-    if 'id' not in response_body:
-        raise APIException('You need to specify the id', status_code=400)    
     
+    response_body = {"family":request_body,
+                     "message": "Exitoso"}
+    
+
     return jsonify(response_body ), 200
 
 @app.route('/members/<int:member_id>', methods=['DELETE'])
